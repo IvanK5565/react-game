@@ -1,5 +1,5 @@
 import {NodeStatus, Core, squareSchema} from '../core/GameCore'
-import {useState, useRef} from "react"
+import {useState} from "react"
 import { useEffect } from 'react';
 
 function getNodeClass(status:NodeStatus){
@@ -15,8 +15,7 @@ function Row({row, y, onClick}:{row:number[], y:number, onClick:Function}){
 }
 
 export default function Game () {
-  const coreRef = useRef(new Core(squareSchema))
-  const [board, setBoard] = useState(coreRef.current.render())
+  const [core, setcore] = useState(new Core())
   const [coord, setcoord] = useState([0,0])
   
   useEffect(() => {
@@ -30,18 +29,18 @@ export default function Game () {
   }, []);
   
   function onClick(x:number, y:number){
-    coreRef.current.click(x,y)
-    setBoard(coreRef.current.render())
+    const newCore = new Core()
+    newCore.copy(core)
+    console.log(core.render())
+    console.log("on click ", x, y)
+    newCore.click(x,y)
+    setcore(newCore)
+    console.log(newCore.render()[0][0])
     setcoord([x,y])
-    console.log(coreRef.current.render())
   }
   
   return <div className="">
-    {board.map((row,i) => <div key={i} className='flex'>
-      {
-        row.map((node,j) => <div key={j} className={getNodeClass(node)} onClick={()=>onClick(j,i)}/>)
-      }
-    </div>)}
+    {core.render().map((row,i) => <Row row={row} key={i} y={i} onClick={onClick}/>)}
     <p>{coord[0]};{coord[1]}</p>
   </div>
 }

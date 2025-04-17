@@ -5,17 +5,17 @@ export enum NodeStatus{
     Inactive,
   }
   
-class Cell{
+class Node{
   private status: NodeStatus;
   
   constructor(status:NodeStatus){
     this.status = status;
   }
   public click(){
-    if(status == NodeStatus.Active)
-      status = NodeStatus.Inactive;
-    if(status == NodeStatus.Inactive)
-      status = NodeStatus.Active;
+    if(this.status == NodeStatus.Active)
+      this.status = NodeStatus.Inactive;
+    if(this.status == NodeStatus.Inactive)
+      this.status = NodeStatus.Active;
   }
   public getStatus(){
     return this.status;
@@ -30,32 +30,37 @@ export const squareSchema: number[][] = [
 ]
 
 export class Core{
-  private cells:Cell[][];
+  private nodes:Node[][];
   private W:number;
   private H:number;
-  constructor(schema:number[][]){
-    
-    this.cells = schema.map(row => {
+  constructor(){
+    this.setSchema(squareSchema)
+  }
+  public setSchema(schema:number[][]){
+    this.nodes = schema.map(row => {
       return row.map(val => {
-        return new Cell(val);
+        return new Node(val);
       })
     })
     this.W = schema[0].length;
     this.H = schema.length;
   }
+  public copy(core:Core){
+    this.nodes = core.nodes;
+    this.W = core.W
+    this.H = core.H
+  }
   
   public click(x: number, y: number){
-  console.log('core click', x, y)
-  console.log('status: ', this.cells[y][x].getStatus())
-    this.cells[y][x].click();
-    console.log(this.cells[y][x].getStatus())
-    if(x>0) this.cells[y][x-1].click();
-    if(y>0) this.cells[y-1][x].click();
-    if(x<this.W-1) this.cells[y][x+1].click();
-    if(y<this.H-1) this.cells[y+1][x].click();
+    console.log("on Core Click", x, y)
+    this.nodes[y][x].click();
+    if(x>0) this.nodes[y][x-1].click();
+    if(y>0) this.nodes[y-1][x].click();
+    if(x<this.W-1) this.nodes[y][x+1].click();
+    if(y<this.H-1) this.nodes[y+1][x].click();
   }
   public render(){
-    let res = this.cells.map(row => row.map(cell => cell.getStatus()));
+    let res = this.nodes.map(row => row.map(node => node.getStatus()));
     
     return res
   }
