@@ -1,4 +1,4 @@
-import {NodeStatus, Core, squareSchema} from '../core/GameCore'
+import {NodeStatus, Core, squareSchema, rombSchema} from '../core/GameCore'
 import {useState} from "react"
 import { useEffect } from 'react';
 
@@ -39,8 +39,21 @@ export default function Game () {
     setcoord([x,y])
   }
   
+  function onChange(value:string){
+    if(value === "square"){
+      core.setSchema(squareSchema)
+    }
+    else if(value === "romb"){
+      core.setSchema(rombSchema)
+    }
+  }
+  
   return <div className="">
     {core.render().map((row,i) => <Row row={row} key={i} y={i} onClick={onClick}/>)}
+    <select onChange={ e => onChange(e.target.value) }>
+      <option value="square">Square</option>
+      <option value="romb">Romb</option>
+    </select>
     <p>{coord[0]};{coord[1]}</p>
   </div>
 }

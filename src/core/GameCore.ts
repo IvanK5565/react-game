@@ -5,7 +5,7 @@ export enum NodeStatus{
     Inactive,
   }
   
-class Node{
+class Cell{
   private status: NodeStatus;
   
   constructor(status:NodeStatus){
@@ -14,7 +14,7 @@ class Node{
   public click(){
     if(this.status == NodeStatus.Active)
       this.status = NodeStatus.Inactive;
-    if(this.status == NodeStatus.Inactive)
+    else if(this.status == NodeStatus.Inactive)
       this.status = NodeStatus.Active;
   }
   public getStatus(){
@@ -26,20 +26,31 @@ export const squareSchema: number[][] = [
   [1,1,1,1,1],
   [1,1,1,1,1],
   [1,1,1,1,1],
+  [1,1,1,1,1],
   [1,1,1,1,1]
 ]
+export const rombSchema: number[][] = [
+  [0,0,1,0,0],
+  [0,1,1,1,0],
+  [1,1,1,1,1],
+  [0,1,1,1,0],
+  [0,0,1,0,0]
+  ]
 
 export class Core{
-  private nodes:Node[][];
+  private nodes:Cell[][];
   private W:number;
   private H:number;
   constructor(){
+    this.nodes = []
+    this.W = 0;
+    this.H = 0;
     this.setSchema(squareSchema)
   }
   public setSchema(schema:number[][]){
     this.nodes = schema.map(row => {
       return row.map(val => {
-        return new Node(val);
+        return new Cell(val);
       })
     })
     this.W = schema[0].length;
